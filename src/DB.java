@@ -1,27 +1,24 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
+import java.sql.*;
 public class DB {
-    private Connection connection=null;
-    Statement statement =null;
-    ResultSet resultSet =null;
-    public void b() {
-        try{
-            Class.forName("com.mysql.jdbs.Driver");
-            connection= DriverManager.getConnection("");
-
-            statement=connection.createStatement();
 
 
-            resultSet = statement.executeQuery("");
-            
+    public static void main(String[] args) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shop?serverTimezone=Europe/Minsk&useSSL=false","root","eNOT$1172$");
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        String query = "select * from shop.seller s where s.Rating>49.5 and s.Status = 'high'";
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+        while (rs.next()) {
+            String seller = rs.getString("idSeller");
+            Float rating = rs.getFloat("Rating");
+            String status = rs.getString("Status");
+            System.out.printf("У продавца %s рейтинг %s и статус %s ", seller, rating, status);
         }
+        statement.close();
     }
-
-
 }
+
+
+
+
+
